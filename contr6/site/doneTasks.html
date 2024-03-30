@@ -1,3 +1,81 @@
 @{
-    Layout = "layout";
+Layout = "layout";
 }
+
+<div class="container-xxl mt-4">
+    <div class="row g-0 post-block p-4 rounded-3 mt-4 text-center">
+        <div class="col col-8">
+            <h1 class="post-main-title ms-5">Список задач</h1>
+        </div>
+        <div class="col col-12  col-lg-9 pe-4">
+            <table class="table table-success table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Заголовок</th>
+                        <th scope="col">Имя исполнителя</th>
+                        <th scope="col">Дата создания</th>
+                        <th scope="col">Статус</th>
+                        <th scope="col">Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var task in Model.TasksList){
+                    string link = $"http://localhost:8000/task.html?id={@task.Id}";
+                    @if(task.Status == "done"){
+                    <tr>
+                        <th scope="row "><a class="link-underline link-underline-opacity-0 link-dark"
+                                href="@link">@task.Id</a></th>
+                        <td><a class="link-underline link-underline-opacity-0 link-dark" href=@link>@task.Heading</a>
+                        </td>
+                        <td><a class="link-underline link-underline-opacity-0 link-dark"
+                                href="@link">@task.ExecutorName</a></td>
+                        <td><a class="link-underline link-underline-opacity-0 link-dark"
+                                href="@link">@task.CreatedDate</a></td>
+                        <td><a class="link-underline link-underline-opacity-0 link-dark" href="@link">@task.Status</a>
+                        </td>
+                        <td>
+                            <form action="http://localhost:8000/index.html" method="post">
+                                <div class="row text-center ">
+                                    <div class="col col-6">
+                                        @if(task.Status=="new"){
+                                        <button type="submit" class="btn btn-light my-auto" name="todone"
+                                            value=@task.Id>выполнить</button>
+                                        }
+                                    </div>
+                                    <div class="col col-6">
+                                        <button type="submit" class="btn btn-light my-auto" name="delete"
+                                            value=@task.Id>удалить</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                    }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col col-12 col-lg-3 bg-success pb-5 pt-3 ">
+            <form class="connection-form " method="post">
+                <div class="row w-75 w-lg-50 mx-auto">
+                    <h5>Добавить новую</h5>
+                    <div class="col-12  px-1">
+                        <label class="choise mt-3" for="heading">Заголовок</label>
+                        <input type="text" id="heading" name="heading" required=""
+                            class=" form-control form-control-lg rounded-1 ">
+                        <label class="choise mt-3" for="userName">Имя пользователя</label>
+                        <input type="text" id="userName" name="exName" required=""
+                            class="form-control form-control-lg rounded-1 my-3 ">
+                    </div>
+                    <div class="col-12 ">
+                        <label class="choise " for="comment">Описание задачи</label>
+                        <textarea class="form-control form-control-lg  h-100" id="comment" name="description"
+                            rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-light mt-5" value="Create"> Добавить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
