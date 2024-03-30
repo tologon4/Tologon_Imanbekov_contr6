@@ -4,21 +4,21 @@ namespace contr6;
 
 public class Serializer
 {
-    private static List<Task>? Tasks { get; set; }
+    private static List<TaskF>? Tasks { get; set; }
     
-    public static List<Task>? GetTasks()
+    public static List<TaskF>? GetTasks()
     {
         if (File.Exists("../../../tasks.json"))
-            return Tasks = Tasks ?? JsonSerializer.Deserialize<List<Task>>(File.ReadAllText("../../../tasks.json"));
+            return Tasks = Tasks ?? JsonSerializer.Deserialize<List<TaskF>>(File.ReadAllText("../../../tasks.json"));
         else
         {
             Console.WriteLine("Файл считывания не найден!\n Создаю файл ...");
             File.WriteAllText("../../../tasks.json", "");
-            return new List<Task>();
+            return new List<TaskF>();
         }
     }
 
-    public static void OverrideFile(List<Task> tasks)
+    public static void OverrideFile(List<TaskF> tasks)
     {
         JsonSerializerOptions options = new JsonSerializerOptions
         {

@@ -1,6 +1,6 @@
 namespace contr6;
 
-public class Task
+public class TaskF
 {
     public int Id { get; set; }
     public string Heading { get; set; }
@@ -10,7 +10,7 @@ public class Task
     public string Description { get; set; }
     private static int tick = Environment.TickCount;
 
-    public Task(string heading, string executorName, string description)
+    public TaskF(string heading, string executorName, string description)
     {
         Id = Interlocked.Increment(ref tick);
         Heading = heading;
