@@ -5,20 +5,6 @@ string site = "../../../site";
 HttpServer server = new HttpServer(tasks);
 await server.RunAsync(site, 8000);
 
-void ToDoneTask(int id)
-{
-    foreach (var task in tasks)
-        if (task.Id == id)
-            task.Status = "done";
-}
-
-void DeleteTask(int id)
-{
-    foreach (var task in tasks)
-        if (task.Id == id)
-            tasks.Remove(task);
-}
-
 List<TaskF> TasksAvailIdent()
 {
     try

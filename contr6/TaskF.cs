@@ -9,6 +9,7 @@ public class TaskF
     public string Status { get; set; }
     public string Description { get; set; }
     private static int tick = 0;
+    public string DoneDate { get; set; }
 
     public TaskF(string heading, string executorName, string description)
     {

@@ -53,26 +53,43 @@ public class HttpServer
         }
     }
     
-    async Task AddNewTaskAsync(Stream stream, HttpListenerContext context)
+    async Task AddNewTaskAsync(Stream stream)
     {
         Dictionary<string, string> taskInfo = new Dictionary<string, string>();
         StreamReader streamReader = new StreamReader(stream, Encoding.UTF8);
         string? buffer = await streamReader.ReadToEndAsync();
-        string[] catName = buffer.Split('&');
-        foreach (var prop in catName)
+        if (buffer.Contains("delete") || buffer.Contains("todone"))
         {
-            string[] buffer2 = prop.Split('=');
-            taskInfo.Add(buffer2[0], string.Join(' ', buffer2[buffer2.Length-1].Split('+')));
+            string[] actAndId = buffer.Split('=');
+            TaskDelDone(actAndId[0], actAndId[actAndId.Length-1]);
         }
-        Tasks.Add(new TaskF(taskInfo["heading"],taskInfo["exName"], taskInfo["description"]));
+        else
+        {
+            string[] catName = buffer.Split('&');
+            foreach (var prop in catName)
+            {
+                string[] buffer2 = prop.Split('=');
+                taskInfo.Add(buffer2[0], string.Join(' ', buffer2[buffer2.Length-1].Split('+')));
+            }
+            Tasks.Add(new TaskF(taskInfo["heading"],taskInfo["exName"], taskInfo["description"]));
+        }
+        
         Serializer.OverrideFile(Tasks);
+    }
+
+    void TaskDelDone(string taskAct, string id)
+    {
+        if (taskAct=="delete")
+            DeleteTask(int.Parse(id));
+        else
+            ToDoneTask(int.Parse(id));
     }
     private void Process(HttpListenerContext context)
     {
         if (context.Request.HttpMethod=="POST")
         {
             var stream = context.Request.InputStream;
-            AddNewTaskAsync(stream , context);
+            AddNewTaskAsync(stream);
             context.Response.Redirect("http://localhost:8000/index.html");
         }
         NameValueCollection query = context.Request.QueryString;
@@ -91,6 +108,7 @@ public class HttpServer
                 }
                 else
                     content = File.ReadAllText(filename);
+                
                 byte[] htmlBytes = Encoding.UTF8.GetBytes(content);
                 Stream fileStream = new MemoryStream(htmlBytes);
                 
@@ -133,12 +151,28 @@ public class HttpServer
         dictionary.TryGetValue(fileExtension, out contentType);
         return contentType;
     }
+    void ToDoneTask(int id)
+    {
+        foreach (var task in Tasks)
+            if (task.Id == id)
+            {
+                task.Status = "done";
+                task.DoneDate = DateTime.Today.ToString("dd-MM-yyyy");
+            }
+        Serializer.OverrideFile(Tasks);
+    }
 
+    void DeleteTask(int id)
+    {
+        foreach (var task in Tasks)
+            if (task.Id == id)
+                Tasks.Remove(task);
+        Serializer.OverrideFile(Tasks);
+    }
     private string BuildHtml(string fileName, string? taskId)
     {
         string html = "";
         string layoutPath = "../../../site/layout.html";
-        
         var razorService = Engine.Razor;
         if (!razorService.IsTemplateCached("layout", null))
             razorService.AddTemplate("layout", File.ReadAllText(layoutPath));
@@ -147,7 +181,7 @@ public class HttpServer
             razorService.AddTemplate(fileName, File.ReadAllText(fileName));
             razorService.Compile(fileName);
         }
-        Console.WriteLine(taskId+"     " + fileName+"    " + "this is id ");
+                
         if (fileName == $"{_siteDirectory}/index.html")
             return razorService.Run(fileName, null, new
             {

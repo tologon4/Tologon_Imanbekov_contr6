@@ -2,13 +2,32 @@
     Layout = "layout";
 }
 <h1 class="card-title text-center my-5">Задача №@Model.Task.Id</h1>
-<div class="row g-0 row-cols-1 row-cols-md-2 sec-cont ">
-    <div class="col col-4 p-4">
+<div class="row g-0 row-cols-1 row-cols-md-2 sec-cont border border-4">
+    <div class="col col-4 p-4 border border-4">
         <p>Исполнитель задачи: @Model.Task.ExecutorName</p>
         <p>Дата создания: @Model.Task.CreatedDate</p>
-        <p>Дата выполнения: </p>
+        <p>Дата выполнения: @Model.Task.DoneDate</p>
     </div>
-    <div class="col col-8 p-4">
+    <div class="col col-8 p-4 border border-4">
+        <form action="http://localhost:8000/index.html" method="post">
+            <div class="row text-center ">
+                <div class="col col-6">
+                    @if(@Model.Task.Status=="new"){
+                    <button type="submit" class="btn btn-light my-auto" name="todone" value=@Model.Task.Id>выполнить</button>
+                    }
+                </div>
+                <div class="col col-6">
+                    <button type="submit" class="btn btn-light my-auto" name="delete" value=@Model.Task.Id>удалить</button>
+                </div>
+            </div>
+        </form>
         <h5 class="mt-auto">Описание задачи</h5>
+    </div>
+</div>
+<div class="row text-center ">
+    <div class="col col-12 border border-4">
+        <p>
+            @Model.Task.Description
+        </p>
     </div>
 </div>
