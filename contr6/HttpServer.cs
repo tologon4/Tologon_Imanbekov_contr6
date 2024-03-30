@@ -85,11 +85,12 @@ public class HttpServer
             try
             {
                 string content = "";
-                if (filename.Contains("html")) 
-                    content = BuildHtml(filename, query["IdFrom"]);
+                if (filename.Contains("html"))
+                {
+                    content = BuildHtml(filename, query["id"]);
+                }
                 else
                     content = File.ReadAllText(filename);
-
                 byte[] htmlBytes = Encoding.UTF8.GetBytes(content);
                 Stream fileStream = new MemoryStream(htmlBytes);
                 
@@ -133,11 +134,11 @@ public class HttpServer
         return contentType;
     }
 
-    private string BuildHtml(string fileName, string userString)
+    private string BuildHtml(string fileName, string? taskId)
     {
         string html = "";
         string layoutPath = "../../../site/layout.html";
-
+        
         var razorService = Engine.Razor;
         if (!razorService.IsTemplateCached("layout", null))
             razorService.AddTemplate("layout", File.ReadAllText(layoutPath));
@@ -146,10 +147,27 @@ public class HttpServer
             razorService.AddTemplate(fileName, File.ReadAllText(fileName));
             razorService.Compile(fileName);
         }
-        return razorService.Run(fileName, null, new
+        Console.WriteLine(taskId+"     " + fileName+"    " + "this is id ");
+        if (fileName == $"{_siteDirectory}/index.html")
+            return razorService.Run(fileName, null, new
+            {
+                TasksList = Tasks,
+            });
+        else if (fileName == $"{_siteDirectory}/task.html")
         {
-            TasksList = Tasks
-        });
+            return razorService.Run(fileName, null, new
+            {
+                Task = Tasks.FirstOrDefault(task => task.Id == int.Parse(taskId))
+            });
+        }
+        else
+        {
+            return razorService.Run(fileName, null, new
+            {
+                TasksList = Tasks,
+            });
+        }
+        
     }
     
 }

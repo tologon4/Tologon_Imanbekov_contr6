@@ -1,3 +1,14 @@
 @{
     Layout = "layout";
 }
+<h1 class="card-title text-center my-5">Задача №@Model.Task.Id</h1>
+<div class="row g-0 row-cols-1 row-cols-md-2 sec-cont ">
+    <div class="col col-4 p-4">
+        <p>Исполнитель задачи: @Model.Task.ExecutorName</p>
+        <p>Дата создания: @Model.Task.CreatedDate</p>
+        <p>Дата выполнения: </p>
+    </div>
+    <div class="col col-8 p-4">
+        <h5 class="mt-auto">Описание задачи</h5>
+    </div>
+</div>

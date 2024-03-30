@@ -2,28 +2,6 @@
     Layout = "layout";
 }
 
-<nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav me-auto ms-3 ">
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="http://localhost:8000/index.html">Все задачи</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="http://localhost:8000/doneTasks.html">Выполненные</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="http://localhost:8000/newTasks.html">Новые</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="http://localhost:8000/stats.html">Статистика</a>
-            </li>
-        </ul>
-    </div>
-</nav>
 <div class="container-xxl mt-4">
     <div class="row g-0 post-block p-4 rounded-3 mt-4 text-center">
         <div class="col col-8">
@@ -43,17 +21,18 @@
                 </thead>
                 <tbody> 
                     @foreach(var task in Model.TasksList){
+                        string link = $"http://localhost:8000/task.html?id={@task.Id}";
                     <tr>
                         <th scope="row"><a class="link-underline link-underline-opacity-0 link-dark"
-                                href="http://localhost:8000/stats.html">@task.Id</a></th>
+                                href="@link">@task.Id</a></th>
                         <td><a class="link-underline link-underline-opacity-0 link-dark"
-                                href="http://localhost:8000/stats.html">@task.Heading</a></td>
+                                href=@link>@task.Heading</a></td>
                         <td><a class="link-underline link-underline-opacity-0 link-dark"
-                                href="http://localhost:8000/stats.html">@task.ExecutorName</a></td>
+                                href="@link">@task.ExecutorName</a></td>
                         <td><a class="link-underline link-underline-opacity-0 link-dark"
-                                href="http://localhost:8000/stats.html">@task.CreatedDate</a></td>
+                                href="@link">@task.CreatedDate</a></td>
                         <td><a class="link-underline link-underline-opacity-0 link-dark"
-                                href="http://localhost:8000/stats.html">@task.Status</a></td>
+                                href="@link">@task.Status</a></td>
                         <td></td>
                     </tr>
                     }
