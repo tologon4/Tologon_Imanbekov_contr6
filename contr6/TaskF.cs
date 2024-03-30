@@ -8,7 +8,7 @@ public class TaskF
     public string CreatedDate { get; set; } 
     public string Status { get; set; }
     public string Description { get; set; }
-    private static int tick = Environment.TickCount;
+    private static int tick = 0;
 
     public TaskF(string heading, string executorName, string description)
     {
@@ -19,4 +19,5 @@ public class TaskF
         CreatedDate = DateTime.Today.ToString("dd-MM-yyyy");
         Status = "new";
     }
+    
 }

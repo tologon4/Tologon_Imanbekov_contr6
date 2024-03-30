@@ -52,8 +52,29 @@ public class HttpServer
             Console.WriteLine(e.Message);
         }
     }
+    
+    async Task AddNewTaskAsync(Stream stream, HttpListenerContext context)
+    {
+        Dictionary<string, string> taskInfo = new Dictionary<string, string>();
+        StreamReader streamReader = new StreamReader(stream, Encoding.UTF8);
+        string? buffer = await streamReader.ReadToEndAsync();
+        string[] catName = buffer.Split('&');
+        foreach (var prop in catName)
+        {
+            string[] buffer2 = prop.Split('=');
+            taskInfo.Add(buffer2[0], string.Join(' ', buffer2[buffer2.Length-1].Split('+')));
+        }
+        Tasks.Add(new TaskF(taskInfo["heading"],taskInfo["exName"], taskInfo["description"]));
+        Serializer.OverrideFile(Tasks);
+    }
     private void Process(HttpListenerContext context)
     {
+        if (context.Request.HttpMethod=="POST")
+        {
+            var stream = context.Request.InputStream;
+            AddNewTaskAsync(stream , context);
+            context.Response.Redirect("http://localhost:8000/index.html");
+        }
         NameValueCollection query = context.Request.QueryString;
         string filename = context.Request.Url.AbsolutePath;
         Console.WriteLine(filename);
@@ -127,7 +148,8 @@ public class HttpServer
         }
         return razorService.Run(fileName, null, new
         {
-            
+            TasksList = Tasks
         });
     }
+    
 }
