@@ -187,7 +187,7 @@ public class HttpServer
             {
                 TasksList = Tasks,
             });
-        else if (fileName == $"{_siteDirectory}/task.html")
+        else if (fileName == $"{_siteDirectory}/task.html" )
         {
             return razorService.Run(fileName, null, new
             {

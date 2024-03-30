@@ -1,3 +1,27 @@
 @{
     Layout = "layout";
 }
+<h1>Статистика</h1>
+@{
+    int done = 0;
+    int new = 0;
+    foreach (var task in Model.TasksList){
+        if(@task.Status == "new"){
+            @done ++;
+        }
+        else{
+            @new++;
+        }
+    }
+    string doneList = $"width: {(@done/@Model.TasksList.count)*100}";
+    string newList = $"width: {(@new/@Model.TasksList.count)*100}";
+<div class="progress">
+    <div class="progress-bar bg-info" role="progressbar" style="@doneList" aria-valuenow="50" aria-valuemin="0"
+        aria-valuemax="100"></div>
+</div>
+
+<div class="progress">
+    <div class="progress-bar bg-danger" role="progressbar" style="@newList" aria-valuenow="100" aria-valuemin="0"
+        aria-valuemax="100"></div>
+</div>
+}
